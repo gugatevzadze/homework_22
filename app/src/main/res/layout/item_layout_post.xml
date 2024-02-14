@@ -55,63 +55,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivProfile" />
 
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/imageContainer"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvImages"
         android:layout_width="0dp"
-        android:layout_height="170dp"
-        android:layout_marginVertical="10dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/ivCover1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/item_shape_post"
-            android:paddingEnd="5dp"
-            android:scaleType="centerCrop" />
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/ivCover2"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@drawable/item_shape_post"
-                android:paddingStart="5dp"
-                android:paddingBottom="5dp"
-                android:scaleType="centerCrop" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/ivCover3"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@drawable/item_shape_post"
-                android:paddingStart="5dp"
-                android:paddingTop="5dp"
-                android:scaleType="centerCrop" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
     <View
         android:id="@+id/dividerOne"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/item_color"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageContainer"
-        app:shapeAppearance="@color/item_color" />
+        app:layout_constraintTop_toBottomOf="@id/rvImages" />
 
 
     <androidx.appcompat.widget.AppCompatImageView
