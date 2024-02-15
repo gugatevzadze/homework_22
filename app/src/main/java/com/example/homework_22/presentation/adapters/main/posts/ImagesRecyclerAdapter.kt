@@ -1,40 +1,47 @@
 package com.example.homework_22.presentation.adapters.main.posts
 
-import android.util.Log
+import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.homework_22.databinding.ItemLayoutImagesBinding
 import com.example.homework_22.presentation.extension.loadImage
-import com.example.homework_22.presentation.model.main.posts.PostsModel
 
-class ImagesRecyclerAdapter : ListAdapter<PostsModel, ImagesRecyclerAdapter.ImagesViewHolder>(ImagesDiffCallback()) {
+class ImagesRecyclerAdapter : ListAdapter<String, ImagesRecyclerAdapter.ImagesViewHolder>(ImagesDiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImagesViewHolder {
-        val imageView = ImageView(parent.context)
-        return ImagesViewHolder(imageView)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ImagesRecyclerAdapter.ImagesViewHolder {
+        val binding =
+            ItemLayoutImagesBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ImagesViewHolder(binding)
     }
+
+
 
     override fun onBindViewHolder(holder: ImagesViewHolder, position: Int) {
-        Log.d("CustomAdapter", "Binding item at position: $position")
-        getItem(position).images?.let { holder.bind(it) }
+        holder.bind()
     }
 
-    inner class ImagesViewHolder(private val imageView: ImageView) :
-        RecyclerView.ViewHolder(imageView) {
-        fun bind(images: List<String>) {
-            Log.d("CustomAdapter", "Loading image: ${images[0]}")
-            imageView.loadImage(images[0])
+    inner class ImagesViewHolder(private val binding: ItemLayoutImagesBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        private lateinit var imageUrl: String
+        fun bind() {
+            imageUrl = currentList[adapterPosition]
+            binding.apply {
+                ivImage.loadImage(imageUrl)
+            }
         }
     }
 
-    private class ImagesDiffCallback : DiffUtil.ItemCallback<PostsModel>() {
-        override fun areItemsTheSame(oldItem: PostsModel, newItem: PostsModel): Boolean {
-            return oldItem.id == newItem.id
+    private class ImagesDiffCallback : DiffUtil.ItemCallback<String>() {
+        override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
+            return oldItem == newItem
         }
 
-        override fun areContentsTheSame(oldItem:PostsModel, newItem: PostsModel): Boolean {
+        override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
             return oldItem == newItem
         }
     }

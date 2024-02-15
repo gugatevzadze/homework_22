@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homework_22.databinding.ItemLayoutPostBinding
-import com.example.homework_22.presentation.adapters.main.layout_manager.CustomLayoutManager
+import com.example.homework_22.presentation.adapters.main.custom_layout.CustomLayoutManager
 import com.example.homework_22.presentation.extension.loadImage
 import com.example.homework_22.presentation.model.main.posts.PostsModel
 
@@ -24,19 +24,16 @@ class PostsRecyclerAdapter : ListAdapter<PostsModel, PostsRecyclerAdapter.PostsV
 
     override fun onBindViewHolder(holder: PostsViewHolder, position: Int) {
         holder.bind()
-        val images = currentList[position].images
-        if (images != null) {
-            holder.setImages(images)
-        }
     }
 
-    inner class PostsViewHolder(val binding: ItemLayoutPostBinding) :
+    inner class PostsViewHolder(private val binding: ItemLayoutPostBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private lateinit var item: PostsModel
         fun bind() {
             item = currentList[adapterPosition]
             binding.apply {
                 tvUser.text = buildString {
+                    //write this inside of the model
                     append(item.owner.firstName)
                     append(" ")
                     append(item.owner.lastName)
@@ -44,15 +41,21 @@ class PostsRecyclerAdapter : ListAdapter<PostsModel, PostsRecyclerAdapter.PostsV
                 ivProfile.loadImage(item.owner.profile)
                 tvDate.text = item.owner.postDate
                 tvTitle.text = item.title
+                //change this to use string resources
                 "${item.comments} Comments".also { tvMessages.text = it }
                 "${item.likes} Likes".also { tvLikes.text = it }
+
+                //declaring the inner adapter
+                initializeImagesAdapter(binding, item)
             }
         }
+    }
 
-        fun setImages(images: List<String>) {
-            binding.rvImages.layoutManager = CustomLayoutManager(binding.root.context)
-            binding.rvImages.adapter = ImagesRecyclerAdapter()
-        }
+    private fun initializeImagesAdapter(binding: ItemLayoutPostBinding, item: PostsModel) {
+        val imagesAdapter = ImagesRecyclerAdapter()
+        imagesAdapter.submitList(item.images)
+        binding.rvImages.layoutManager = CustomLayoutManager()
+        binding.rvImages.adapter = imagesAdapter
     }
 
     private class PostsDiffCallback : DiffUtil.ItemCallback<PostsModel>() {
