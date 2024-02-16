@@ -44,4 +44,5 @@ class CustomLayoutManager : RecyclerView.LayoutManager() {
     private fun layoutDecoratedWithLog(child: View, left: Int, top: Int, right: Int, bottom: Int) {
         layoutDecorated(child, left, top, right, bottom)
     }
+
 }

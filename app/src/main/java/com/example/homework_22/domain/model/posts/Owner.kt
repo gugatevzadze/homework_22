@@ -1,4 +1,4 @@
-package com.example.homework_22.domain.model.stories
+package com.example.homework_22.domain.model.posts
 
 data class Owner(
     val firstName: String,

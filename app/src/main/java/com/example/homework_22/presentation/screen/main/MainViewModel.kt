@@ -3,14 +3,16 @@ package com.example.homework_22.presentation.screen.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.homework_22.data.common.Resource
-import com.example.homework_22.domain.usecase.posts.GetStoriesListUseCase
-import com.example.homework_22.domain.usecase.stories.GetPostsListUseCase
+import com.example.homework_22.domain.usecase.stories.GetStoriesListUseCase
+import com.example.homework_22.domain.usecase.posts.GetPostsListUseCase
 import com.example.homework_22.presentation.event.main.MainEvents
 import com.example.homework_22.presentation.mapper.main.posts.toPresentation
 import com.example.homework_22.presentation.mapper.main.stories.toPresentation
+import com.example.homework_22.presentation.model.main.posts.PostsModel
 import com.example.homework_22.presentation.state.main.MainState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.update
@@ -26,10 +28,14 @@ class MainViewModel @Inject constructor(
     private val _mainState = MutableStateFlow(MainState())
     val mainState:SharedFlow<MainState> get() = _mainState
 
+    private val _mainNavigationEvent = MutableSharedFlow<MainNavigationEvents>()
+    val mainNavigationEvent: SharedFlow<MainNavigationEvents> get() = _mainNavigationEvent
+
     fun onEvent(event: MainEvents) {
         when (event) {
             is MainEvents.GetPostsList -> getPostsList()
             is MainEvents.GetStoriesList -> getStoriesList()
+            is MainEvents.PostsItemClick -> onPostItemClick(event.post)
         }
     }
 
@@ -61,6 +67,12 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    private fun onPostItemClick(post: PostsModel) {
+        viewModelScope.launch {
+            _mainNavigationEvent.emit(MainNavigationEvents.NavigateToPostDetails(post.id))
+        }
+    }
+
     private fun <T> handleResource(resourceFlow: Flow<Resource<T>>, handleSuccess: (T) -> Unit) {
         viewModelScope.launch {
             resourceFlow.collect { resource ->
@@ -73,5 +85,9 @@ class MainViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    sealed interface MainNavigationEvents {
+        data class NavigateToPostDetails(val postId: Int): MainNavigationEvents
     }
 }

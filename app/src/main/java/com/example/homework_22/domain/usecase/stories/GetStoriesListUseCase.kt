@@ -1,4 +1,4 @@
-package com.example.homework_22.domain.usecase.posts
+package com.example.homework_22.domain.usecase.stories
 
 import com.example.homework_22.domain.repository.stories.StoriesRepository
 import javax.inject.Inject

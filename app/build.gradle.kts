@@ -4,6 +4,7 @@ plugins {
     id("androidx.navigation.safeargs")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -22,7 +23,7 @@ android {
 
     buildTypes {
 
-        getByName("debug"){
+        getByName("debug") {
             buildConfigField(
                 "String",
                 "BASE_URL",
@@ -49,7 +50,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildFeatures{
+    buildFeatures {
         viewBinding = true
         buildConfig = true
     }
@@ -88,6 +89,10 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
     //circle image view
     implementation("de.hdodenhof:circleimageview:3.1.0")
+    //firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
+    implementation("com.google.firebase:firebase-analytics-ktx:21.5.1")
+    implementation("com.google.firebase:firebase-messaging-ktx:23.4.1")
 }
 kapt {
     correctErrorTypes = true

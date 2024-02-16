@@ -1,4 +1,4 @@
-package com.example.homework_22.domain.model.posts
+package com.example.homework_22.domain.model.stories
 
 data class Stories(
     val id: String,

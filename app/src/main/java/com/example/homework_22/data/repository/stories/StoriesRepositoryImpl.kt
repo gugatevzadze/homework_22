@@ -5,7 +5,7 @@ import com.example.homework_22.data.common.ResponseHandler
 import com.example.homework_22.data.mapper.base.mapToDomain
 import com.example.homework_22.data.mapper.stories.toDomain
 import com.example.homework_22.data.service.stories.StoriesApiService
-import com.example.homework_22.domain.model.posts.Stories
+import com.example.homework_22.domain.model.stories.Stories
 import com.example.homework_22.domain.repository.stories.StoriesRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

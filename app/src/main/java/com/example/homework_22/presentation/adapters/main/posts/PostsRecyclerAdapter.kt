@@ -5,12 +5,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.homework_22.R
 import com.example.homework_22.databinding.ItemLayoutPostBinding
 import com.example.homework_22.presentation.adapters.main.custom_layout.CustomLayoutManager
 import com.example.homework_22.presentation.extension.loadImage
 import com.example.homework_22.presentation.model.main.posts.PostsModel
 
-class PostsRecyclerAdapter : ListAdapter<PostsModel, PostsRecyclerAdapter.PostsViewHolder>(
+class PostsRecyclerAdapter(
+    private val onPostsClick: (PostsModel) -> Unit
+
+) : ListAdapter<PostsModel, PostsRecyclerAdapter.PostsViewHolder>(
     PostsDiffCallback()
 ) {
     override fun onCreateViewHolder(
@@ -32,21 +36,20 @@ class PostsRecyclerAdapter : ListAdapter<PostsModel, PostsRecyclerAdapter.PostsV
         fun bind() {
             item = currentList[adapterPosition]
             binding.apply {
-                tvUser.text = buildString {
-                    //write this inside of the model
-                    append(item.owner.firstName)
-                    append(" ")
-                    append(item.owner.lastName)
-                }
+                tvUser.text = item.owner.fullName
                 ivProfile.loadImage(item.owner.profile)
                 tvDate.text = item.owner.postDate
                 tvTitle.text = item.title
-                //change this to use string resources
-                "${item.comments} Comments".also { tvMessages.text = it }
-                "${item.likes} Likes".also { tvLikes.text = it }
+                tvMessages.text = itemView.context.getString(R.string.comments, item.comments)
+                tvLikes.text = itemView.context.getString(R.string.likes, item.likes)
 
                 //declaring the inner adapter
                 initializeImagesAdapter(binding, item)
+
+                //click listener
+                itemView.setOnClickListener {
+                    onPostsClick.invoke(item)
+                }
             }
         }
     }
@@ -56,6 +59,12 @@ class PostsRecyclerAdapter : ListAdapter<PostsModel, PostsRecyclerAdapter.PostsV
         imagesAdapter.submitList(item.images)
         binding.rvImages.layoutManager = CustomLayoutManager()
         binding.rvImages.adapter = imagesAdapter
+
+        val params = binding.rvImages.layoutParams
+        if (item.images.isNullOrEmpty()) {
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT
+        }
+        binding.rvImages.layoutParams = params
     }
 
     private class PostsDiffCallback : DiffUtil.ItemCallback<PostsModel>() {

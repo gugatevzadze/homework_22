@@ -1,6 +1,4 @@
-package com.example.homework_22.domain.model.stories
-
-import com.squareup.moshi.Json
+package com.example.homework_22.domain.model.posts
 
 data class Posts(
     val id: Int,

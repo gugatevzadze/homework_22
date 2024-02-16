@@ -2,8 +2,8 @@ package com.example.homework_22.data.mapper.posts
 
 import com.example.homework_22.data.model.posts.OwnerDto
 import com.example.homework_22.data.model.posts.PostsDto
-import com.example.homework_22.domain.model.stories.Owner
-import com.example.homework_22.domain.model.stories.Posts
+import com.example.homework_22.domain.model.posts.Owner
+import com.example.homework_22.domain.model.posts.Posts
 
 fun PostsDto.toDomain(): Posts {
     return Posts(
