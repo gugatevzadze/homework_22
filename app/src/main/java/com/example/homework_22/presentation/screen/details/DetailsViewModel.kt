@@ -7,9 +7,11 @@ import com.example.homework_22.domain.usecase.posts.GetPostsDetailsUseCase
 import com.example.homework_22.presentation.event.details.DetailsEvent
 import com.example.homework_22.presentation.mapper.main.posts.toPresentation
 import com.example.homework_22.presentation.mapper.main.stories.toPresentation
+import com.example.homework_22.presentation.screen.main.MainViewModel
 import com.example.homework_22.presentation.state.details.DetailsState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.update
@@ -24,9 +26,13 @@ class DetailsViewModel @Inject constructor(
     private val _detailsState = MutableStateFlow(DetailsState())
     val detailsState: SharedFlow<DetailsState> get() = _detailsState
 
+    private val _navigationEvent = MutableSharedFlow<DetailNavigationEvents>()
+    val navigationEvent: SharedFlow<DetailNavigationEvents> get() = _navigationEvent
+
     fun onEvent(event: DetailsEvent) {
         when (event) {
             is DetailsEvent.GetPostsDetails -> getPostsDetails(event.postId)
+            is DetailsEvent.BackButtonPressed -> onBackButtonPressed()
         }
     }
 
@@ -62,5 +68,14 @@ class DetailsViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun onBackButtonPressed() {
+        viewModelScope.launch {
+            _navigationEvent.emit(DetailNavigationEvents.NavigateToMainFragment)
+        }
+    }
+    sealed interface DetailNavigationEvents {
+        data object NavigateToMainFragment : DetailNavigationEvents
     }
 }

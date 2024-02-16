@@ -9,7 +9,11 @@
         android:id="@+id/detailsFragment"
         android:name="com.example.homework_22.presentation.screen.details.DetailsFragment"
         android:label="fragment_details"
-        tools:layout="@layout/fragment_details" />
+        tools:layout="@layout/fragment_details" >
+        <action
+            android:id="@+id/action_detailsFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
     <fragment
         android:id="@+id/messagesFragment"
         android:name="com.example.homework_22.presentation.screen.messages.MessagesFragment"

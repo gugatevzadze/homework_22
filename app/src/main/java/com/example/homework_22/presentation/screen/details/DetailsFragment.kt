@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.example.homework_22.databinding.FragmentDetailsBinding
 import com.example.homework_22.presentation.adapters.main.custom_layout.CustomLayoutManager
 import com.example.homework_22.presentation.adapters.main.posts.ImagesRecyclerAdapter
@@ -27,10 +28,12 @@ class DetailsFragment : BaseFragment<FragmentDetailsBinding>(FragmentDetailsBind
     override fun setUp() {
         extractPostId()
         adapterSetUp()
+        handleBackButton()
     }
 
     override fun bindObservers() {
         observePostDetails()
+        observeNavigation()
     }
 
     private fun adapterSetUp(){
@@ -46,6 +49,17 @@ class DetailsFragment : BaseFragment<FragmentDetailsBinding>(FragmentDetailsBind
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.detailsState.collect {
                     handlePostDetails(it)
+                }
+            }
+        }
+    }
+
+    private fun observeNavigation() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.navigationEvent.collect {
+                    handleNavigation(it)
+
                 }
             }
         }
@@ -72,6 +86,20 @@ class DetailsFragment : BaseFragment<FragmentDetailsBinding>(FragmentDetailsBind
             binding.root.showSnackBar(it)
         }
         binding.progressBar.isVisible = state.isLoading
+    }
+
+    private fun handleNavigation(event: DetailsViewModel.DetailNavigationEvents) {
+        when (event) {
+            is DetailsViewModel.DetailNavigationEvents.NavigateToMainFragment -> { findNavController().navigate(
+                DetailsFragmentDirections.actionDetailsFragmentToMainFragment())
+            }
+        }
+    }
+
+    private fun handleBackButton() {
+        binding.ibBack.setOnClickListener {
+            viewModel.onEvent(DetailsEvent.BackButtonPressed)
+        }
     }
 
 
