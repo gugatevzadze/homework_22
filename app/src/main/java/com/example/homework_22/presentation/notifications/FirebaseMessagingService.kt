@@ -4,10 +4,11 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.navigation.NavDeepLinkBuilder
+import com.example.homework_22.App
 import com.example.homework_22.R
 import com.example.homework_22.presentation.MainActivity
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -17,36 +18,37 @@ class FirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
-        message.notification?.let {
-            val id = message.data["id"]?.toIntOrNull() ?: 0
-            val title = it.title ?: "Test Title"
-            val desc = it.body ?: "Test Desc"
-            sendNotification(id, title, desc)
-        }
+
+        val postId = message.data["id"]?.toIntOrNull() ?: 0
+        val title = message.data["title"] ?: "Test Title"
+        val desc = message.data["desc"] ?: "Test Desc"
+
+        Log.d("FirebaseMessagingService", "onMessageReceived: id=$postId, title=$title, desc=$desc")
+        sendNotification(postId, title, desc)
     }
 
-    private fun sendNotification(id: Int, title: String, desc: String) {
-        val args = Bundle().also {
-            it.putInt("id", id)
+    private fun sendNotification(postId: Int, title: String, desc: String) {
+
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra("postId", postId)
         }
 
-        val pendingIntent = NavDeepLinkBuilder(this)
-            .setGraph(R.navigation.nav_graph)
-            .setDestination(R.id.detailsFragment)
-            .setArguments(args)
-            .createPendingIntent()
+        val pendingIntent = PendingIntent.getActivity(
+            this, 0, intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
-        val notification = NotificationCompat.Builder(this, "channel_id")
-            .setSmallIcon(R.drawable.ic_splash_screen_logo)
+        val builder = NotificationCompat.Builder(this, "channel_id")
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(title)
             .setContentText(desc)
-            .setAutoCancel(true)
             .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
 
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        notificationManager.notify(0, notification.build())
+        notificationManager.notify(postId, builder.build())
     }
 
     override fun onNewToken(token: String) {

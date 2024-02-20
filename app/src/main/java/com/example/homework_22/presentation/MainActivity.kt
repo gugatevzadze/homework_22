@@ -1,6 +1,7 @@
 package com.example.homework_22.presentation
 
 import android.Manifest
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -8,11 +9,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.homework_22.R
 import com.example.homework_22.databinding.ActivityMainBinding
+import com.example.homework_22.presentation.screen.main.MainFragmentDirections
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +40,8 @@ class MainActivity : AppCompatActivity() {
         readPushToken()
         requestPermission()
         bottomNavigationSetUp()
+
+        handleIntent(intent)
     }
 
     private fun bottomNavigationSetUp() {
@@ -69,5 +74,20 @@ class MainActivity : AppCompatActivity() {
                 return@OnCompleteListener
             }
         })
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent?) {
+        val postId = intent?.getIntExtra("postId", -1) ?: -1
+        if (postId != -1) {
+            val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+            val action = MainFragmentDirections.actionMainFragmentToDetailsFragment(postId)
+            navController.navigate(action)
+        }
     }
 }
