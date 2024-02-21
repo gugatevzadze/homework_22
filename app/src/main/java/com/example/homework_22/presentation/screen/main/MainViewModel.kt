@@ -3,8 +3,8 @@ package com.example.homework_22.presentation.screen.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.homework_22.data.common.Resource
-import com.example.homework_22.domain.usecase.stories.GetStoriesListUseCase
 import com.example.homework_22.domain.usecase.posts.GetPostsListUseCase
+import com.example.homework_22.domain.usecase.stories.GetStoriesListUseCase
 import com.example.homework_22.presentation.event.main.MainEvents
 import com.example.homework_22.presentation.mapper.main.posts.toPresentation
 import com.example.homework_22.presentation.mapper.main.stories.toPresentation

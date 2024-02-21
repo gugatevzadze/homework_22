@@ -6,8 +6,6 @@ import com.example.homework_22.data.common.Resource
 import com.example.homework_22.domain.usecase.posts.GetPostsDetailsUseCase
 import com.example.homework_22.presentation.event.details.DetailsEvent
 import com.example.homework_22.presentation.mapper.main.posts.toPresentation
-import com.example.homework_22.presentation.mapper.main.stories.toPresentation
-import com.example.homework_22.presentation.screen.main.MainViewModel
 import com.example.homework_22.presentation.state.details.DetailsState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
